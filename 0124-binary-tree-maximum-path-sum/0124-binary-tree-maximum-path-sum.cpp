@@ -14,11 +14,10 @@ public:
     int ans=INT_MIN;
     int ansFetcher(TreeNode* root){
         if(!root) return 0;
-        int left=ansFetcher(root->left);
-        int right=ansFetcher(root->right);
-        int val=(left<0? 0:left)+(right<0? 0:right)+root->val;
-        ans=max(ans,val);
-        return root->val+max(left,max(right,0));
+        int left=max(0,ansFetcher(root->left));
+        int right=max(0,ansFetcher(root->right));
+        ans=max(ans,root->val+left+right);
+        return root->val+max(left,right);
     }
     int maxPathSum(TreeNode* root) {
         ansFetcher(root);
