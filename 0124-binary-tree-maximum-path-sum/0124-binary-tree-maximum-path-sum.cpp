@@ -21,6 +21,7 @@ public:
         return root->val+max(left,max(right,0));
     }
     int maxPathSum(TreeNode* root) {
-        return max(ansFetcher(root),ans);
+        ansFetcher(root);
+        return ans;
     }
 };
