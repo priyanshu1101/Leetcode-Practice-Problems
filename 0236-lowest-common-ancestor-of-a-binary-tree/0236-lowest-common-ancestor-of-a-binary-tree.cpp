@@ -9,21 +9,13 @@
  */
 class Solution {
 public:
-    bool ansFetcher(TreeNode* root,TreeNode* &ans,TreeNode* p, TreeNode* q)
-    {
-        if(!root) return false;
-        bool left=ansFetcher(root->left,ans,p,q);
-        bool right=ansFetcher(root->right,ans,p,q);
-        if(((root->val==p->val || root->val==q->val) && left) || ((root->val==p->val || root->val==q->val) && right) || (left && right)){
-            ans=root;
-            return true;
-        }
-        if(root->val==p->val || root->val==q->val) return true;
-        else return left|right;
-    }
     TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
-        TreeNode* ans;
-        ansFetcher(root,ans,p,q);
-        return ans;
+        if(!root) return NULL;
+        if(root->val==p->val || root->val==q->val) return root;
+        TreeNode* left=lowestCommonAncestor(root->left,p,q);
+        TreeNode* right=lowestCommonAncestor(root->right,p,q);
+        if(!left) return right;
+        else if(!right) return left;
+        else return root;
     }
 };
