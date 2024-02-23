@@ -1,45 +1,30 @@
 class Solution {
 public:
-    int m;
-    int k;
-    const int MOD = 1e9+7;
-    int t[1001][1001];
-    
-    int solve(int i, int j, vector<vector<long long>>& freq, string &target) {
-        if(i == m)
-            return 1;
-        
-        if(j == k)
-            return 0;
-        
-        if(t[i][j] != -1)
-            return t[i][j];
-        
-        int not_taken = solve(i, j+1, freq, target)%MOD;
-        
-        int taken     = (freq[target[i] - 'a'][j] * solve(i+1, j+1, freq, target))%MOD;
-        
-        
-        return t[i][j] = (not_taken + taken)%MOD;
+    int n; // target size
+    int m;  //word size
+    const int mod=1e9+7;
+    long long solve(string &target,vector<vector<int>> &frequency,int i,int j,vector<string> &words,vector<vector<long long>> &mem)
+    {
+        if(mem[i][j]!=-1) return mem[i][j];
+        if(j==n) return 1;
+        if(i==m) return 0;
+        long long taken=(solve(target,frequency,i+1,j+1,words,mem)*frequency[target[j]-'a'][i])%mod;
+        long long notTaken=solve(target,frequency,i+1,j,words,mem)%mod;
+        return mem[i][j]=(taken+notTaken)%mod;
     }
-    
     int numWays(vector<string>& words, string target) {
-        
-        k = words[0].size();
-        m = target.length();
-        
-        vector<vector<long long>> freq(26, vector<long long>(k));
-        
-        for(int col = 0; col < k; col++) {
-            
-            for(string &word : words) {
-                
-                freq[word[col] - 'a'][col]++;
-                
+        n=target.length(); 
+        m=words[0].length();
+        vector<vector<int>> frequency(27,vector<int>(m,0));
+        vector<vector<long long>> mem(1001,vector<long long>(1001,-1));
+        for(auto word:words)
+        {
+            for(int i=0;i<word.length();i++)
+            {
+                char ch=word[i];
+                frequency[ch-'a'][i]++;
             }
-            
         }
-        memset(t, -1, sizeof(t));
-        return solve(0, 0, freq, target);
+        return solve(target,frequency,0,0,words,mem);
     }
 };
