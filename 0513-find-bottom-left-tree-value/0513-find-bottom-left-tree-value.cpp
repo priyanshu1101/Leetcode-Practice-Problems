@@ -11,20 +11,20 @@
  */
 class Solution {
 public:
-    void ansFetcher(TreeNode* root,int height,int &maxHeight,int &ans)
-    {
+    int maxHeight;
+    int ans;
+    void solve(TreeNode* root,int height){
         if(!root) return;
-        if(height>maxHeight){
-            ans=root->val;
+        if(maxHeight<height){
             maxHeight=height;
-        };
-        ansFetcher(root->left,height+1,maxHeight,ans);
-        ansFetcher(root->right,height+1,maxHeight,ans);
+            ans=root->val;
+        }
+        solve(root->left,height+1);
+        solve(root->right,height+1);
     }
     int findBottomLeftValue(TreeNode* root) {
-        int ans=0;
-        int maxHeight=INT_MIN;
-        ansFetcher(root,0,maxHeight,ans);
+        maxHeight=INT_MIN;
+        solve(root,0);
         return ans;
     }
 };
