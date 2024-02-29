@@ -20,22 +20,13 @@ public:
             int lastMin=INT_MAX;
             int lastMax=INT_MIN;
             for(int i=0;i<size;i++){
-                if(level%2==0){
                     TreeNode* temp=q.front();
                     q.pop();
-                    if(temp->val%2==0 || lastMax>=temp->val)  return false;
+                    if((level%2==0 && (temp->val%2==0 || lastMax>=temp->val)) || (level%2!=0 && (temp->val%2!=0 || lastMin<=temp->val)))  return false;
                     lastMax=temp->val;
-                    if(temp->left) q.push(temp->left);
-                    if(temp->right) q.push(temp->right);
-                }
-                else{
-                    TreeNode* temp=q.front();
-                    q.pop();
-                    if(temp->val%2!=0 || lastMin<=temp->val)  return false;
                     lastMin=temp->val;
                     if(temp->left) q.push(temp->left);
                     if(temp->right) q.push(temp->right);
-                }
             }
             level++;
         }
