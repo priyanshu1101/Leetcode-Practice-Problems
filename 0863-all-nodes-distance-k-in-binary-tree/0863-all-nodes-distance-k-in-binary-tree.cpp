@@ -31,6 +31,7 @@ public:
                 que.pop();
                 visited[temp]=true;
                 if(level==k) ans.push_back(temp->val);
+                if(level>k) return ans;
                 if(record.find(temp)!=record.end() && !visited[record[temp]]){
                     que.push(record[temp]);
                 }
