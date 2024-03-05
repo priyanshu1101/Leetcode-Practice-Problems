@@ -7,8 +7,9 @@ public:
             char first=s[pre];
             if(last!=first) return suf-pre+1;
             while(s[pre]==last && pre<suf) pre++;
-            while(s[suf]==first && pre<=suf) suf--;
+            while(s[suf]==first && pre<suf) suf--;
         }
+        if(pre==suf) return 0;
         return suf-pre+1;
     }
 };
