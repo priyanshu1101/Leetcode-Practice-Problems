@@ -19,14 +19,19 @@ public:
             sum+=curr->val;
             if(mp[sum]==NULL){
                 mp[sum]=curr;
-                curr=curr->next;
             }
             else{
-                mp[sum]->next=curr->next;
-                curr=curr->next;
-                mp.erase(mp.begin(),mp.end());
-                curr=head;
+                ListNode* start = mp[sum];
+                ListNode* temp=start->next;
+                int tempsum=sum;
+                while(temp!=curr->next){
+                    tempsum+=temp->val;
+                    mp.erase(tempsum);
+                    temp=temp->next;
+                }
+                start->next=curr->next;
             }
+            curr=curr->next;
         }
         return head->next;
     }
