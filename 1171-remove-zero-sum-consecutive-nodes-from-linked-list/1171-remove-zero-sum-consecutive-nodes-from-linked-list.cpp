@@ -24,7 +24,7 @@ public:
                 ListNode* start = mp[sum];
                 ListNode* temp=start->next;
                 int tempsum=sum;
-                while(temp!=curr->next){
+                while(temp!=curr){
                     tempsum+=temp->val;
                     mp.erase(tempsum);
                     temp=temp->next;
