@@ -59,22 +59,22 @@ public:
         TreeNode* head=new TreeNode(getNumber(data),NULL,NULL);
         queue<TreeNode*> que;
         que.push(head);
-        while(!que.empty() && data.length()>0){
+        while(!que.empty()){
             int size=que.size();
             for(int i=0;i<size;i++){
                 TreeNode* temp=que.front();
                 que.pop();
                 int number=getNumber(data);
-                if(data.length()>0 && number!=1001){
+                if(number!=1001){
                     temp->left=new TreeNode(number,NULL,NULL);
                     que.push(temp->left);
                 }
                 number=getNumber(data);
-                if(data.length()>0 && number!=1001){
+                if(number!=1001){
                     temp->right=new TreeNode(number,NULL,NULL);
                     que.push(temp->right);
                 }
-            }
+             }
         }
         return head;
     }
