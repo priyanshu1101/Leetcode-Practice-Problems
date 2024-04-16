@@ -5,47 +5,67 @@ public:
         if(nums.size()<3)
             return ans;
         sort(nums.begin(),nums.end());
-        for(int i=0;i<nums.size()-2;i++)
+        int start=0;
+        int prev;
+        int ptr1=start+1;
+        int ptr2=nums.size()-1;
+        while(start<=nums.size()-3)
         {
-            int ptr1=i+1;
-            int ptr2=nums.size()-1;
-            if(i>0 && nums[i]==nums[i-1])
+            if(ptr1==ptr2)
             {
-                continue;
+                prev=nums[start];
+                start++;
+                while(start<=nums.size()-3 && nums[start]==prev)
+                {
+                    prev=nums[start];
+                    start++;
+                }
+                ptr1=start+1;
+                ptr2=nums.size()-1;
             }
-            while(ptr1<ptr2)
+            else
             {
-                if(nums[ptr1]+nums[ptr2]+nums[i]==0)
+                if(nums[start]+nums[ptr1]+nums[ptr2]==0)
                 {
-                    vector<int> subans{nums[ptr1],nums[ptr2],nums[i]};
+                    vector<int> subans;
+                    subans.push_back(nums[start]);
+                    subans.push_back(nums[ptr1]);
+                    subans.push_back(nums[ptr2]);
                     ans.push_back(subans);
-                    ptr1++;
-                    for(int j=ptr1;ptr1<ptr2 && j<ptr2;j++)
+                    
+                    
+                    prev=nums[start];
+                    start++;
+                    while(start<=nums.size()-3 && nums[start]==prev)
                     {
-                        if(nums[ptr1]==nums[ptr1-1])
-                            ptr1++;
-                        else
-                            break;
-                    }
-                    ptr2--;
-                    for(int j=ptr2;ptr1<ptr2 && j>ptr1;j--)
-                    {
-                        if(nums[ptr2]==nums[ptr2+1])
-                            ptr2--;
-                        else
-                            break;
+                        prev=nums[start];
+                        start++;
                     }
                 }
-                else if(nums[ptr1]+nums[ptr2]+nums[i]<0)
-                {
-                    ptr1++;
-                }
-                else if(nums[ptr1]+nums[ptr2]+nums[i]>0)
+                else if(nums[start]+nums[ptr1]+nums[ptr2]>0)
                 {
                     ptr2--;
+                }
+                else if(nums[start]+nums[ptr1]+nums[ptr2]<0)
+                {
+                    ptr1++;
                 }
             }
         }
+        
+        
+        
+        
+        // vector<int> subans;
+        // subans.push_back(-1);
+        // subans.push_back(-1);
+        // subans.push_back(2);
+        // ans.push_back(subans);
+        // subans.clear();
+        // subans.push_back(0);
+        // subans.push_back(-1);
+        // subans.push_back(1);
+        // ans.push_back(subans);
         return ans;
     }
 };
