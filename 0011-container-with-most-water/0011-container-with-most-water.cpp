@@ -8,7 +8,7 @@ public:
             ltr[i]=max(ltr[i],ltr[i-1]);
         }
         for(int i=height.size()-2;i>=0;i--){
-            rtl[i]=max(rtl[i+1],ltr[i]);
+            rtl[i]=max(rtl[i+1],rtl[i]);
         }
         int left=0,right=height.size()-1;
         while(left<right){
