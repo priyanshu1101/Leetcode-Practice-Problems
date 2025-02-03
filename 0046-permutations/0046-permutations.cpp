@@ -1,30 +1,19 @@
 class Solution {
 public:
-    bool isEmpty(vector<int> nums){
-        for(int i=0;i<nums.size();i++){
-            if(nums[i]!=INT_MIN) return false;
-        }
-        return true;
-    }
-    void ansFinder(vector<int> nums,vector<vector<int>>& ans,vector<int> subans){
-        if(isEmpty(nums)){
-            ans.push_back(subans);
+    vector<vector<int>> ans;
+    void ansFinder(vector<int>nums,int i){
+        if(i==nums.size()-1){
+            ans.push_back(nums);
             return;
         }
-        for(int i=0;i<nums.size();i++){
-            if(nums[i]==INT_MIN) continue;
-            int value = nums[i];
-            subans.push_back(value);
-            nums[i]=INT_MIN;
-            ansFinder(nums,ans,subans);
-            nums[i]=value;
-            subans.pop_back();
+        for(int j=i;j<nums.size();j++){
+            swap(nums[i],nums[j]);
+            ansFinder(nums,i+1);
+            swap(nums[i],nums[j]);
         }
     }
     vector<vector<int>> permute(vector<int>& nums) {
-        vector<vector<int>> ans;
-        vector<int> subans;
-        ansFinder(nums,ans,subans);
-        return ans;
+       ansFinder(nums,0);
+       return ans; 
     }
 };
