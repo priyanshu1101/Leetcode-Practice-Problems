@@ -1,21 +1,19 @@
 class Solution {
 public:
-    int ansFinder(vector<vector<int>> &dp, int m, int n) {
-        if (dp[m][n] != -1){
-            cout<<m<<" "<<n<<" "<<dp[m][n]<<endl;
-            return dp[m][n];
+    int combination(int n,int r){
+        int diff=n-r;
+        long long int ans=1;
+        for(int i=n;i>max(r,n-r);i--){
+            ans*=i;
+            ans/=(n-i+1);
         }
-        if (m == 1 && n == 1) {
-            return 1;
-        }
-        if (m == 0 || n == 0)
-            return 0;
-        int value = ansFinder(dp,m - 1, n) + ansFinder(dp,m, n - 1);
-        dp[m][n] = value;
-        return value;
+        // for(int i=1;i<=min(n-r,r);i++){
+        //     ans/=i;
+        // }
+        return ans;
     }
     int uniquePaths(int m, int n) {
-        vector<vector<int>> dp(100, vector<int>(100, -1));
-        return ansFinder(dp, m, n);
+        int totalSteps = m+n-2;
+        return combination(totalSteps,m-1);
     }
 };
