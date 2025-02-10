@@ -10,30 +10,18 @@
  */
 class Solution {
 public:
-    ListNode* midFinder(ListNode* head){
-        ListNode* slow=head;
-        ListNode* fast=head;
-        while(fast && fast->next){
-            slow=slow->next;
-            fast=fast->next->next;
-        }
-        return slow;
-    }
-    ListNode* reverseList(ListNode* head){
-        if(!head || !head->next) return head;
-        ListNode* newHead=reverseList(head->next);
-        head->next->next=head;
-        head->next=NULL;
-        return newHead;
-    }
-    bool isPalindrome(ListNode* head) {
-        ListNode* mid=midFinder(head);
-        ListNode* reverseHead = reverseList(mid);
-        while(reverseHead){
-            if(head->val!=reverseHead->val) return false;
-            reverseHead=reverseHead->next;
+    string number(ListNode* head){
+        string ans="";
+        while(head){
+            ans+=head->val+'0';
             head=head->next;
         }
-        return true;
+        return ans;
+    }
+    bool isPalindrome(ListNode* head) {
+        string getNumber = number(head);
+        string revNumber = getNumber;
+        reverse(revNumber.begin(),revNumber.end());
+        return  revNumber==getNumber;
     }
 };
