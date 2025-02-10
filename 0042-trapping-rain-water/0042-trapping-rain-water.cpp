@@ -1,19 +1,23 @@
 class Solution {
 public:
-    int trap(vector<int>& height) {
-        int l=0,r=height.size()-1,leftMax=0,rightMax=0,ans=0;
-        while(l<r){
-            if(height[l]<height[r]){
-                if(height[l]<leftMax) ans+=leftMax-height[l];
-                else leftMax=height[l];
-                l++;
-            }
-            else{
-                if(height[r]<rightMax) ans+=rightMax-height[r];
-                else rightMax=height[r];
-                r--;
-            }
+    void initialiseRef(vector<int>& leftMost,vector<int>& rightMost){
+        int lmost=0;
+        int rmost=0;
+        for(int i=0;i<leftMost.size();i++){
+            leftMost[i]=max(lmost,leftMost[i]);
+            lmost=leftMost[i];
+            rightMost[rightMost.size()-i-1]=max(rmost,rightMost[rightMost.size()-i-1]);
+            rmost=rightMost[rightMost.size()-i-1];
         }
-        return ans;
+    }
+    int trap(vector<int>& height) {
+        vector<int> leftMost= height;
+        vector<int> rightMost = height;
+        initialiseRef(leftMost,rightMost);
+        int waterCapacity=0;
+        for(int i=0;i<height.size();i++){
+            waterCapacity+=min(leftMost[i],rightMost[i])-height[i];
+        }
+        return waterCapacity;
     }
 };
