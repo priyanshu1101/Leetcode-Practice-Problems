@@ -6,53 +6,62 @@
  *     TreeNode *right;
  *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
  *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left),
+ * right(right) {}
  * };
  */
 class Solution {
 public:
-    unordered_map<TreeNode*,TreeNode*> parent_path;
-    void parentRecordKeeper(TreeNode* root){
+    void parentRecordKeeper(TreeNode* root,unordered_map<TreeNode*, TreeNode*> &parent){
         if(!root) return;
-        if(root->left) parent_path[root->left]=root;
-        if(root->right) parent_path[root->right]=root;
-        parentRecordKeeper(root->left);
-        parentRecordKeeper(root->right);
+        if(root->left){
+            parent[root->left]=root;
+            parentRecordKeeper(root->left,parent);
+        }
+        if(root->right){
+            parent[root->right]=root;
+            parentRecordKeeper(root->right,parent);
+        }
     }
-    TreeNode* findTarget(TreeNode* root,int start){
-        if(!root) return NULL;
-        if(root->val==start) return root;
-        TreeNode* temp=findTarget(root->left,start);
-        return temp==NULL? findTarget(root->right,start):temp;
+    void infectedRecordKeeper(TreeNode* root,unordered_map<TreeNode*, bool> &infected,int first){
+        if(!root) return;
+        infected[root]=root->val==first;
+        if(root->left){
+            infectedRecordKeeper(root->left,infected,first);
+        }
+        if(root->right){
+            infectedRecordKeeper(root->right,infected,first);
+        }
     }
     int amountOfTime(TreeNode* root, int start) {
-        parentRecordKeeper(root);
-        TreeNode* target=findTarget(root,start);
+        if(!root->left && !root->right) return 0;
+        unordered_map<TreeNode*, TreeNode*> parent;
+        parentRecordKeeper(root, parent); // records
+        unordered_map<TreeNode*, bool> infected;
+        infectedRecordKeeper(root, infected, start);
         queue<TreeNode*> que;
-        unordered_map<TreeNode*,bool> infected;
-        int timeCount=0;
-        que.push(target);
-        infected[target]=true;
-        while(!que.empty()){
-            int size=que.size();
-            for(int i=0;i<size;i++){
-                TreeNode* temp=que.front();
+        que.push(root);
+        int time=0;
+        while (!que.empty()) {
+            int size = que.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode* top = que.front();
+                if (parent.find(top) != parent.end() && !infected[parent[top]]) {
+                    que.push(parent[top]);
+                    infected[parent[top]] = true;
+                }
+                if (top->left && !infected[top->left]) {
+                    que.push(top->left);
+                    infected[top->left] = true;
+                }
+                if (top->right && !infected[top->right]) {
+                    que.push(top->right);
+                    infected[top->right] = true;
+                }
                 que.pop();
-                if(temp->left && !infected[temp->left]){
-                    que.push(temp->left);
-                    infected[temp->left]=true;
-                }
-                if(temp->right && !infected[temp->right]){
-                    que.push(temp->right);
-                    infected[temp->right]=true;
-                }
-                if(parent_path[temp] && !infected[parent_path[temp]]){
-                    que.push(parent_path[temp]);
-                    infected[parent_path[temp]]=true;
-                }
             }
-            timeCount++;
+            time++;
         }
-        return --timeCount;
+        return time;
     }
 };
