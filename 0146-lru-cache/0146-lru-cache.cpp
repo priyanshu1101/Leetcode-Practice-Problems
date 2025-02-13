@@ -1,54 +1,72 @@
+class Node{
+    public:
+    int value;
+    int key;
+    Node* next;
+    Node* prev;
+    Node(int value,int key,Node* prev,Node* next){
+        this->key=key;
+        this->value=value;
+        this->prev=prev;
+        this->next=next;
+    }
+    void deleteFromPosition(){
+        this->prev->next=this->next;
+        this->next->prev=this->prev;
+    }
+    void addAtLast(Node* tail){
+        tail->prev->next=this;
+        this->prev=tail->prev;
+        this->next=tail;
+        tail->prev=this;
+    }
+};
 class LRUCache {
 public:
-    queue<pair<int, int>> record;
+    unordered_map<int,Node*> record;
+    Node* head;
+    Node* tail;
     int capacity;
-    LRUCache(int capacity) { this->capacity = capacity; }
-
-    int get(int key) {
-        queue<pair<int, int>> tempQueue;
-        int value = -1;
-        pair<int, int> selectedPair = {};
-        while (!record.empty()) {
-            if (record.front().first == key) {
-                selectedPair = record.front();
-                value = record.front().second;
-            } else {
-                tempQueue.push(record.front());
-            }
-            record.pop();
-        }
-        if (value != -1)
-            tempQueue.push(selectedPair);
-        record = tempQueue;
-        return value;
+    LRUCache(int capacity) {
+        this->capacity=capacity;
+        head=new Node(-1,-1,NULL,NULL);
+        tail=new Node(-1,-1,head,NULL);
+        head->next=tail;
     }
+    
+    int get(int key) {
+        if(record.find(key)!=record.end()){
+            Node* nodeUsed=record[key];
+            nodeUsed->deleteFromPosition();
+            nodeUsed->addAtLast(tail);
+            return nodeUsed->value;
+        }else return -1;
+    }
+    
+    void put(int key, int val) {
+        if(record.find(key)!=record.end()){
+            Node* nodeUsed=record[key];
+            nodeUsed->value=val;
 
-    void put(int key, int newValue) {
-        queue<pair<int, int>> tempQueue;
-        int value = -1;
-        pair<int, int> selectedPair = {};
-        while (!record.empty()) {
-            if (record.front().first == key) {
-                selectedPair = record.front();
-                value = newValue;
-                selectedPair.second = newValue;
-            } else {
-                tempQueue.push(record.front());
+            nodeUsed->deleteFromPosition();
+            nodeUsed->addAtLast(tail);
+        }else{
+            if(capacity==record.size())
+            {
+                Node* newNode = new Node(val,key,NULL,NULL);
+                Node* nodeUsed = head->next;
+                nodeUsed->deleteFromPosition();
+                record.erase(nodeUsed->key);
+                newNode->addAtLast(tail);
+                record[key]=newNode;
             }
-            record.pop();
-        }
-        if (value != -1) {
-            tempQueue.push(selectedPair);
-            record = tempQueue;
-        } else {
-            if (tempQueue.size() == capacity) {
-                tempQueue.pop();
-                tempQueue.push({key, newValue});
-            } else {
-                tempQueue.push({key, newValue});
+            else{
+                Node* nodeUsed = new Node(val,key,NULL,NULL);
+                record[key]=nodeUsed;
+                nodeUsed->addAtLast(tail);
             }
-            record = tempQueue;
-        }
+        };
+
     }
 };
 
