@@ -11,16 +11,17 @@
  */
 class Solution {
 public:
-    int ans=INT_MIN;
-    int ansFetcher(TreeNode* root){
-        if(!root) return 0;
-        int left=max(0,ansFetcher(root->left));
-        int right=max(0,ansFetcher(root->right));
-        ans=max(ans,root->val+left+right);
-        return root->val+max(left,right);
+    int maxFinder(TreeNode* root,int &maxPath)
+    {
+        if(!root)   return 0;
+        int leftValue=(maxFinder(root->left,maxPath)<0)? 0:maxFinder(root->left,maxPath);
+        int rightValue=(maxFinder(root->right,maxPath)<0)? 0:maxFinder(root->right,maxPath);
+        maxPath=max(maxPath,leftValue+root->val+rightValue);
+        return max(leftValue,rightValue)+root->val;
     }
     int maxPathSum(TreeNode* root) {
-        ansFetcher(root);
-        return ans;
+        int maxPath=INT_MIN;
+        int valueIncludingRoot=maxFinder(root,maxPath);
+        return max(maxPath,valueIncludingRoot);
     }
 };
